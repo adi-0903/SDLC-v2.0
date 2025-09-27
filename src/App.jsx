@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
+import ResumeAnalysisSection from './components/ResumeAnalysisSection.jsx';
 import JobDetails from './components/JobDetails.jsx';
 import EnhancedApplicationForm from './components/EnhancedApplicationForm.jsx';
 import Footer from './components/Footer.jsx';
@@ -50,7 +51,7 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'job-details', 'apply'];
+      const sections = ['home', 'resume-analysis', 'job-details', 'apply'];
       const scrollPosition = window.scrollY + 100;
 
       sections.forEach(section => {
@@ -82,6 +83,10 @@ function App() {
       <Header activeSection={activeSection} scrollToSection={scrollToSection} />
       <main>
         <Hero job={jobData} scrollToSection={scrollToSection} />
+        <ResumeAnalysisSection 
+          jobDescription={jobData.description}
+          jobTitle={jobData.title}
+        />
         <JobDetails job={jobData} />
         <EnhancedApplicationForm 
           jobTitle={jobData.title} 

@@ -5,7 +5,7 @@
  * OpenRouter Integration
  * API key to be configured for your project
  */
-const OPENROUTER_API_KEY = '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'; // Replace this with your real OpenRouter API key
+const OPENROUTER_API_KEY = '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'; // Replace this with your real OpenRouter API key
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 /**
@@ -226,6 +226,7 @@ export const analyzeResumeWithOpenRouter = async (resumeText, jobDescription) =>
     throw new Error(`Analysis failed: ${error.message}`);
   }
 };
+
 
 
 /**

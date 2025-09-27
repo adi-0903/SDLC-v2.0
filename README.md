@@ -4,6 +4,7 @@
 
 ![AI Resume Analyzer](https://img.shields.io/badge/AI-Resume%20Analyzer-blue?style=for-the-badge&logo=react)
 ![Version](https://img.shields.io/badge/Version-2.0-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react)
 ![Node.js](https://img.shields.io/badge/Node.js-22.18.0-339933?style=for-the-badge&logo=node.js)
 
@@ -54,10 +55,12 @@
 
 ### 🎯 **Core Functionality**
 - **Smart Resume Upload**: Drag-and-drop interface with file validation
+- **Three-Step Analysis Process**: Upload → Analyzing → Results workflow
 - **AI Analysis Engine**: Comprehensive resume evaluation against job requirements
 - **Real-Time Scoring**: Instant percentage-based matching scores
 - **Intelligent Recommendations**: AI-generated hiring suggestions
 - **Skills Gap Analysis**: Detailed breakdown of matched vs missing skills
+- **Dual Analysis Modes**: Standalone resume analysis + integrated application form
 
 ### 📊 **Analytics & Reporting**
 - **Professional PDF Reports**: Branded, multi-page analysis documents
@@ -68,6 +71,9 @@
 ### 🎨 **Premium User Experience**
 - **Glass Morphism Design**: Modern frosted glass effects with backdrop blur
 - **Smooth Animations**: Staggered form animations and micro-interactions
+- **Purple Gradient Theme**: Consistent purple-blue gradient design system
+- **Circular Progress Indicators**: Animated score displays with visual feedback
+- **Modal Overlays**: Full-screen detailed analysis reports
 - **Responsive Layout**: Optimized for desktop, tablet, and mobile
 - **Interactive Elements**: Hover effects, loading states, and transitions
 
@@ -84,15 +90,18 @@
 ```mermaid
 graph TB
     A[User Interface] --> B[React Components]
-    B --> C[AI Resume Analyzer]
-    B --> D[Enhanced Application Form]
-    C --> E[PDF Report Generator]
-    D --> F[API Service Layer]
-    F --> G[Backend API]
-    C --> H[Consistent Analysis Engine]
-    H --> I[Score Calculation]
-    I --> J[Skills Matching]
-    J --> K[Recommendation Engine]
+    B --> C[Resume Analysis Section]
+    B --> D[AI Resume Analyzer]
+    B --> E[Enhanced Application Form]
+    C --> F[Three-Step Workflow]
+    F --> G[Upload → Analyzing → Results]
+    D --> H[PDF Report Generator]
+    E --> I[API Service Layer]
+    I --> J[Backend API]
+    D --> K[Consistent Analysis Engine]
+    K --> L[Score Calculation]
+    L --> M[Skills Matching]
+    M --> N[Recommendation Engine]
 ```
 
 ### 🏛️ **Technology Stack**
@@ -102,7 +111,10 @@ graph TB
 | **Frontend** | React | 19.1.1 | UI Framework |
 | **Build Tool** | Vite | 7.1.6 | Development & Build |
 | **Styling** | CSS3 | - | Premium UI Design |
-| **PDF Generation** | jsPDF | Latest | Report Creation |
+| **PDF Generation** | jsPDF | 3.0.3 | Report Creation |
+| **PDF Parsing** | pdf-parse | 1.1.1 | Resume Text Extraction |
+| **Document Processing** | mammoth | 1.11.0 | Word Document Support |
+| **PDF.js** | pdfjs-dist | 5.4.149 | Advanced PDF Processing |
 | **Runtime** | Node.js | 22.18.0 | JavaScript Runtime |
 | **Package Manager** | npm | Latest | Dependency Management |
 
@@ -139,7 +151,7 @@ npm install && npm run dev
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-username/SDLC-v2.0.git
+   git clone https://github.com/adi-0903/SDLC-v2.0.git
    cd SDLC-v2.0
    ```
 
@@ -214,15 +226,34 @@ Modify colors and styling in `src/styles/`:
 
 ### 👤 **For Candidates**
 
+#### **Option 1: Standalone Resume Analysis**
+1. **Navigate to Resume Analysis Section**
+   - Located between Hero and Job Details sections
+   - Purple gradient background with modern design
+
+2. **Upload Resume (Step 1)**
+   - Drag and drop PDF/DOC files
+   - Maximum file size: 5MB
+   - Supported formats: PDF, DOC, DOCX
+
+3. **AI Processing (Step 2)**
+   - Animated loading state with spinning indicator
+   - Real-time analysis processing
+
+4. **View Results (Step 3)**
+   - Circular progress indicators for scores
+   - Qualification status display
+   - "VIEW FULL REPORT" button for detailed analysis
+
+#### **Option 2: Complete Application Process**
 1. **Fill Application Form**
    - Enter personal information
    - Add technical skills
    - Provide GitHub profile link
 
 2. **Upload Resume**
-   - Drag and drop PDF/DOC files
-   - Maximum file size: 5MB
-   - Supported formats: PDF, DOC, DOCX
+   - Integrated file upload within application form
+   - Same file validation and processing
 
 3. **View AI Analysis**
    - Real-time resume scoring
@@ -260,8 +291,11 @@ Modify colors and styling in `src/styles/`:
 ### ✨ **Interactive Elements**
 
 - **Form Animations**: Staggered field animations on load
+- **Three-Step Workflow**: Upload → Analyzing → Results with smooth transitions
 - **Hover Effects**: Smooth transitions on interactive elements
-- **Loading States**: Professional spinners and progress indicators
+- **Loading States**: Professional spinners and animated progress indicators
+- **Circular Progress**: Animated score displays with visual feedback
+- **Modal Interactions**: Full-screen overlays for detailed reports
 - **Micro-Interactions**: Button animations and feedback
 
 ### 📱 **Responsive Design**
@@ -299,6 +333,39 @@ const generateConsistentAnalysis = (resume, jobDescription) => {
 };
 ```
 
+### 📊 **Comprehensive Skill Categories**
+
+The AI analyzer evaluates candidates across multiple technical domains:
+
+#### 🎨 **Frontend Technologies**
+- **Core**: HTML5, CSS3/SASS/LESS, JavaScript (ES6+), TypeScript
+- **Frameworks**: React.js, Angular, Vue.js, Next.js
+- **Styling**: Tailwind CSS, Bootstrap
+
+#### ⚙️ **Backend Technologies**
+- **Runtime**: Node.js, Express.js
+- **Frameworks**: Django, Flask, Spring Boot, Ruby on Rails, ASP.NET Core, Laravel
+
+#### 🗄️ **Database Technologies**
+- **SQL**: MySQL, PostgreSQL, SQLite
+- **NoSQL**: MongoDB, Redis, Cassandra
+
+#### ☁️ **Cloud & DevOps**
+- **Cloud Platforms**: AWS (EC2, S3, Lambda, RDS), Microsoft Azure, Google Cloud Platform (GCP)
+- **Containerization**: Docker, Kubernetes
+- **CI/CD**: Jenkins, GitHub Actions, GitLab CI/CD
+- **Web Servers**: Nginx, Apache
+
+#### 🛠️ **Development Tools**
+- **Version Control**: Git/GitHub/GitLab/Bitbucket
+- **Build Tools**: Webpack/Vite/Babel
+- **APIs**: REST APIs, GraphQL
+- **Testing**: Postman/Swagger
+- **Project Management**: Jira/Trello/Asana
+
+#### 📱 **Mobile/Cross-platform (Bonus)**
+- React Native, Flutter, Ionic
+
 ### 📊 **Scoring Metrics**
 
 | Category | Weight | Description |
@@ -308,6 +375,10 @@ const generateConsistentAnalysis = (resume, jobDescription) => {
 | **Education** | 20% | Degree, institution, academic performance |
 | **Project Work** | 15% | Portfolio quality, project complexity |
 | **Communication** | 10% | Resume presentation, clarity |
+
+### 🎯 **Automatic Submission Rule**
+
+> **Important**: If the resume analysis score is **60% or higher**, the application will be **automatically submitted** to the hiring team for further review.
 
 ### 🎯 **Analysis Output**
 
@@ -334,6 +405,25 @@ const generateConsistentAnalysis = (resume, jobDescription) => {
   ]
 }
 ```
+
+### 🔄 **Component Integration**
+
+The application now features a **ResumeAnalysisSection** component that provides a streamlined analysis experience:
+
+#### **Key Features:**
+- **Three-Step Process**: Upload → Analyzing → Results with visual progress indicators
+- **Drag-and-Drop Interface**: Intuitive file upload with validation feedback
+- **Animated Loading States**: Professional spinning indicators during analysis
+- **Results Display**: Circular progress bars showing qualification scores
+- **Modal Integration**: Full-screen detailed reports via "VIEW FULL REPORT" button
+- **Responsive Design**: Optimized for all device sizes with purple gradient theme
+
+#### **Technical Implementation:**
+- **Component**: `ResumeAnalysisSection.jsx` (16.8KB)
+- **Styling**: `ResumeAnalysisSection.css` (13.5KB)
+- **Integration**: Seamlessly integrated between Hero and JobDetails sections
+- **AI Integration**: Uses existing AIResumeAnalyzer for consistent analysis results
+- **File Support**: PDF, DOC, DOCX with comprehensive error handling
 
 ---
 
@@ -387,34 +477,51 @@ const headers = {
 ## 🏗️ Project Structure
 
 ```
-ai-resume-analyzer/
+SDLC-v2.0/
 ├── 📁 public/                 # Static assets
 ├── 📁 src/
 │   ├── 📁 components/         # React components
-│   │   ├── AIResumeAnalyzer.jsx
-│   │   ├── EnhancedApplicationForm.jsx
-│   │   ├── Header.jsx
-│   │   ├── Footer.jsx
-│   │   └── ...
+│   │   ├── AIResumeAnalyzer.jsx    # AI analysis component
+│   │   ├── ApplicationForm.jsx     # Basic application form
+│   │   ├── EnhancedApplicationForm.jsx # Enhanced form with validation
+│   │   ├── ResumeAnalysisSection.jsx   # Standalone resume analysis
+│   │   ├── Header.jsx              # Navigation header
+│   │   ├── Footer.jsx              # Footer component
+│   │   ├── Hero.jsx                # Hero section
+│   │   └── JobDetails.jsx          # Job posting details
 │   ├── 📁 services/          # API services
-│   │   └── aiService.js
+│   │   └── aiService.js            # AI integration service
 │   ├── 📁 styles/            # CSS stylesheets
 │   │   ├── AIResumeAnalyzer.css
+│   │   ├── ApplicationForm.css
 │   │   ├── EnhancedApplicationForm.css
-│   │   └── ...
+│   │   ├── ResumeAnalysisSection.css   # Resume analysis styling
+│   │   ├── Header.css
+│   │   ├── Footer.css
+│   │   ├── Hero.css
+│   │   ├── JobDetails.css
+│   │   ├── index.css               # Global styles
+│   │   └── App.css
+│   ├── 📁 utils/             # Utility functions
 │   ├── App.jsx               # Main application
 │   └── index.jsx             # Entry point
-├── 📄 package.json           # Dependencies
-├── 📄 vite.config.js         # Build configuration
-├── 📄 README.md              # This file
-└── 📄 PROJECT_STRUCTURE.md   # Detailed structure guide
+├── 📄 .env                   # Environment variables
+├── 📄 .gitignore            # Git ignore rules
+├── 📄 check.py              # Python validation script
+├── 📄 eslint.config.js      # ESLint configuration
+├── 📄 index.html            # HTML template
+├── 📄 logo.jpg              # Application logo
+├── 📄 package.json          # Dependencies
+├── 📄 vite.config.js        # Build configuration
+└── 📄 README.md             # This file
 ```
 
 ### 📂 **Key Directories**
 
-- **`/components`**: Reusable React components
+- **`/components`**: Reusable React components including the new ResumeAnalysisSection
 - **`/services`**: API integration and utility functions
-- **`/styles`**: Component-specific CSS files
+- **`/styles`**: Component-specific CSS files with modern design system
+- **`/utils`**: Utility functions and helpers
 - **`/public`**: Static assets and favicon
 
 ---
@@ -443,9 +550,11 @@ npm run test:coverage
 
 ### 📊 **Testing Tools**
 
-- **Jest**: JavaScript testing framework
-- **React Testing Library**: Component testing utilities
-- **Vitest**: Fast unit test runner
+- **Vitest**: Fast unit test runner (v3.2.4)
+- **React Testing Library**: Component testing utilities (v16.3.0)
+- **Jest DOM**: Custom Jest matchers (v6.8.0)
+- **User Event**: User interaction simulation (v14.6.1)
+- **jsdom**: DOM environment for testing (v27.0.0)
 
 ---
 
@@ -511,7 +620,7 @@ We welcome contributions! Please follow these guidelines:
 
 1. **Fork the Repository**
    ```bash
-   git fork https://github.com/your-username/ai-resume-analyzer.git
+   git fork https://github.com/adi-0903/SDLC-v2.0.git
    ```
 
 2. **Create Feature Branch**

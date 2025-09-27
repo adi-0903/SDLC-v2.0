@@ -154,11 +154,16 @@ const EnhancedApplicationForm = ({ jobTitle, jobDescription }) => {
     setAiAnalysisResult(null);
   };
 
-  // Form validation - RELAXED FOR DEMO
+  // Form validation - MANDATORY RESUME REQUIRED
   const validateForm = () => {
     const newErrors = {};
 
-    // Only check essential fields for demo
+    // CRITICAL: Resume is mandatory
+    if (!formData.resume) {
+      newErrors.resume = '🚫 Resume is required - Please upload your resume file';
+    }
+
+    // Essential fields
     if (!formData.candidateName.trim()) {
       newErrors.candidateName = 'Name is required';
     }
@@ -219,6 +224,34 @@ const EnhancedApplicationForm = ({ jobTitle, jobDescription }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // CRITICAL: Resume is absolutely mandatory
+    if (!formData.resume) {
+      setErrors(prev => ({
+        ...prev,
+        resume: '🚫 Resume is required - Please upload your resume file',
+        submission: '❌ SUBMISSION BLOCKED: Resume upload is mandatory'
+      }));
+      
+      // Scroll to resume section
+      const resumeSection = document.querySelector('input[type="file"]');
+      if (resumeSection) {
+        resumeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
+      alert('❌ SUBMISSION BLOCKED\n\nResume upload is mandatory. Please upload your resume file to continue.');
+      return;
+    }
+    
+    // CRITICAL: AI analysis must be completed
+    if (!aiAnalysisResult) {
+      setErrors(prev => ({
+        ...prev,
+        submission: '⚠️ Please wait for AI analysis to complete before submitting.'
+      }));
+      alert('⚠️ Please wait for AI analysis to complete before submitting.');
+      return;
+    }
+    
     // CRITICAL: Check AI analysis result before allowing submission
     if (aiAnalysisResult && aiAnalysisResult.submissionEligibility) {
       const { canSubmit, isBlocked, blockingMessage: message, meetsScoreThreshold } = aiAnalysisResult.submissionEligibility;
@@ -238,15 +271,6 @@ const EnhancedApplicationForm = ({ jobTitle, jobDescription }) => {
         
         return; // CRITICAL: Exit function - DO NOT PROCEED WITH SUBMISSION
       }
-    }
-    
-    // Additional check: If no AI analysis result, require resume analysis first
-    if (!aiAnalysisResult && formData.resume) {
-      setErrors(prev => ({
-        ...prev,
-        submission: '⚠️ Please wait for AI analysis to complete before submitting.'
-      }));
-      return;
     }
     
     if (validateForm()) {
@@ -603,17 +627,31 @@ const EnhancedApplicationForm = ({ jobTitle, jobDescription }) => {
 
                 <button 
                   type="submit" 
-                  className={`submit-btn ${submissionBlocked || (aiAnalysisResult && aiAnalysisResult.resumeScore < 60) ? 'blocked' : ''}`}
-                  disabled={isSubmitting || submissionBlocked || (aiAnalysisResult && aiAnalysisResult.resumeScore < 60)}
-                  title={submissionBlocked || (aiAnalysisResult && aiAnalysisResult.resumeScore < 60) ? 
+                  className={`submit-btn ${
+                    !formData.resume || 
+                    submissionBlocked || 
+                    (aiAnalysisResult && aiAnalysisResult.resumeScore < 60) ? 'blocked' : ''
+                  }`}
+                  disabled={
+                    !formData.resume || 
+                    isSubmitting || 
+                    submissionBlocked || 
+                    (aiAnalysisResult && aiAnalysisResult.resumeScore < 60)
+                  }
+                  title={
+                    !formData.resume ? 'Resume upload is required' :
+                    submissionBlocked || (aiAnalysisResult && aiAnalysisResult.resumeScore < 60) ? 
                     'Submission blocked: Resume score below 60% threshold' : 
-                    'Submit your application'}
+                    'Submit your application'
+                  }
                 >
                   {isSubmitting ? (
                     <>
                       <span className="loading-spinner"></span>
                       Submitting...
                     </>
+                  ) : !formData.resume ? (
+                    '📄 Upload Resume Required'
                   ) : submissionBlocked || (aiAnalysisResult && aiAnalysisResult.resumeScore < 60) ? (
                     '🚫 Submission Blocked (Score < 60%)'
                   ) : (
