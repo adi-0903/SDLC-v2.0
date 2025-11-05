@@ -1,12 +1,12 @@
 // AI Service for Resume Analysis
-// This file contains functions to integrate with OpenRouter API
+// This file contains functions to integrate with Google Gemini API
 
 /**
- * OpenRouter Integration
+ * Google Gemini Integration
  * API key to be configured for your project
  */
-const OPENROUTER_API_KEY = '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'; // Replace this with your real OpenRouter API key
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY'; // Replace this with your real Gemini API key
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent';
 
 /**
  * Extract text from uploaded resume file
@@ -163,53 +163,75 @@ Be precise, objective, and base your analysis entirely on the actual content pro
 
 
 /**
- * Analyze resume using OpenRouter
+ * Analyze resume using Google Gemini
  * @param {string} resumeText - Extracted resume text
  * @param {string} jobDescription - Job description
  * @returns {Promise<Object>} - Analysis result
  */
-export const analyzeResumeWithOpenRouter = async (resumeText, jobDescription) => {
+export const analyzeResumeWithGemini = async (resumeText, jobDescription) => {
   try {
-    console.log('Starting OpenRouter API call...');
-    console.log('API Key configured:', OPENROUTER_API_KEY ? 'Yes' : 'No');
+    console.log('Starting Gemini API call...');
+    console.log('API Key configured:', GEMINI_API_KEY ? 'Yes' : 'No');
+    console.log('API URL:', GEMINI_API_URL);
     
-    const response = await fetch(OPENROUTER_API_URL, {
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            {
+              text: createAnalysisPrompt(resumeText, jobDescription)
+            }
+          ]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 2000
+      }
+    };
+    
+    console.log('Request body prepared');
+    
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': window.location.origin || 'http://localhost:5173',
-        'X-Title': 'Resume Analyzer'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: 'openai/gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'user',
-            content: createAnalysisPrompt(resumeText, jobDescription)
-          }
-        ],
-        temperature: 0.3,
-        max_tokens: 2000
-      })
+      body: JSON.stringify(requestBody)
     });
 
     console.log('API Response status:', response.status);
+    console.log('API Response headers:', response.headers);
+    
+    const responseText = await response.text();
+    console.log('API Response text:', responseText);
     
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('API Error Response:', errorText);
-      throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
+      console.error('API Error Response:', responseText);
+      throw new Error(`Gemini API error: ${response.status} - ${responseText}`);
     }
 
-    const data = await response.json();
-    console.log('API Response received:', data);
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Invalid API response structure');
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('Failed to parse response as JSON:', parseError);
+      throw new Error(`Invalid JSON response: ${responseText}`);
     }
     
-    let analysisText = data.choices[0].message.content;
+    console.log('API Response received:', data);
+    
+    // Check for API errors in response
+    if (data.error) {
+      throw new Error(`Gemini API error: ${data.error.message}`);
+    }
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+      console.error('Unexpected response structure:', data);
+      throw new Error('Invalid API response structure - missing candidates or content');
+    }
+    
+    let analysisText = data.candidates[0].content.parts[0].text;
     
     // Clean up the response - remove markdown code blocks if present
     analysisText = analysisText.replace(/```json\s*/g, '').replace(/```\s*$/g, '').trim();
@@ -217,12 +239,20 @@ export const analyzeResumeWithOpenRouter = async (resumeText, jobDescription) =>
     console.log('Cleaned analysis text:', analysisText);
     
     // Parse JSON response
-    const analysisResult = JSON.parse(analysisText);
+    let analysisResult;
+    try {
+      analysisResult = JSON.parse(analysisText);
+    } catch (parseError) {
+      console.error('Failed to parse analysis as JSON:', parseError);
+      console.error('Analysis text was:', analysisText);
+      throw new Error(`Failed to parse AI response as JSON: ${parseError.message}`);
+    }
+    
     console.log('Parsed analysis result:', analysisResult);
     
     return analysisResult;
   } catch (error) {
-    console.error('OpenRouter analysis error details:', error);
+    console.error('Gemini analysis error details:', error);
     throw new Error(`Analysis failed: ${error.message}`);
   }
 };
@@ -285,8 +315,8 @@ export const analyzeResume = async (resumeFile, jobDescription, applicationData 
     // Extract text from resume
     const resumeText = await extractTextFromFile(resumeFile);
     
-    // Analyze with OpenRouter
-    const analysisResult = await analyzeResumeWithOpenRouter(resumeText, jobDescription);
+    // Analyze with Gemini
+    const analysisResult = await analyzeResumeWithGemini(resumeText, jobDescription);
     
     // CRITICAL: Apply business rules - ALWAYS enforce 60% threshold
     const score = Math.max(0, Math.min(100, analysisResult.resumeScore || 0)); // Ensure score is between 0-100
@@ -333,19 +363,19 @@ export const analyzeResume = async (resumeFile, jobDescription, applicationData 
 };
 
 /**
- * Configuration object for OpenRouter provider
+ * Configuration object for Gemini provider
  */
 export const LLM_PROVIDER = {
-  name: 'OpenRouter (Claude 3.5 Sonnet)',
-  description: 'High-quality AI analysis via OpenRouter with multiple model options',
+  name: 'Google Gemini Pro',
+  description: 'High-quality AI analysis via Google Gemini',
   cost: 'Variable',
   speed: 'Fast'
 };
 
 /**
- * Utility function to validate OpenRouter API key
- * @returns {boolean} - Validation status for OpenRouter
+ * Utility function to validate Gemini API key
+ * @returns {boolean} - Validation status for Gemini
  */
 export const validateAPIKey = () => {
-  return OPENROUTER_API_KEY && OPENROUTER_API_KEY.length > 0 && OPENROUTER_API_KEY !== 'YOUR_OPENROUTER_API_KEY_HERE';
+  return GEMINI_API_KEY && GEMINI_API_KEY.length > 0 && GEMINI_API_KEY !== 'YOUR_GEMINI_API_KEY_HERE';
 };
